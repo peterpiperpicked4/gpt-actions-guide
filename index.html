@@ -3,22 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Build Your First GPT with Actions</title>
+  <title>Build Your First GPT with Actions — A Simple Guide</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #faf8f5;
-      --bg-alt: #f0ebe3;
-      --text: #2a2520;
-      --text-muted: #6b635a;
-      --accent: #d4622b;
-      --accent-light: #fef3ed;
-      --code-bg: #1e1b18;
-      --code-text: #e8e4df;
-      --success: #3d8c40;
-      --border: #e0d9cf;
+      --bg: #fffcf7;
+      --bg-warm: #faf5eb;
+      --bg-code: #1c1917;
+      --text: #292118;
+      --text-soft: #5c5347;
+      --text-code: #fafaf9;
+      --accent: #c2410c;
+      --accent-soft: #fed7aa;
+      --success: #15803d;
+      --success-soft: #dcfce7;
+      --border: #e7e0d5;
+      --highlight: #fef3c7;
     }
 
     * {
@@ -27,7 +29,7 @@
       box-sizing: border-box;
     }
 
-    /* Accessibility: Visually hidden but screen reader accessible */
+    /* Accessibility */
     .sr-only {
       position: absolute;
       width: 1px;
@@ -40,7 +42,6 @@
       border: 0;
     }
 
-    /* Skip link */
     .skip-link {
       position: absolute;
       top: -100px;
@@ -62,235 +63,315 @@
 
     html {
       scroll-behavior: smooth;
+      font-size: 18px;
     }
 
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
+      font-family: 'Literata', Georgia, serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.7;
-      font-size: 17px;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
     }
 
+    /* Focus states */
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+
+    /* Layout */
     .container {
-      max-width: 720px;
+      max-width: 680px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 28px;
     }
 
     /* Header */
     header {
+      background: linear-gradient(to bottom, var(--bg-warm), var(--bg));
       padding: 80px 0 60px;
-      text-align: center;
-      position: relative;
+      border-bottom: 1px solid var(--border);
     }
 
-    header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 400px;
-      background: linear-gradient(180deg, var(--accent-light) 0%, var(--bg) 100%);
-      z-index: -1;
-    }
-
-    .badge {
-      display: inline-block;
-      background: var(--accent);
-      color: white;
-      font-size: 12px;
+    .eyebrow {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.75rem;
       font-weight: 600;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 6px 14px;
-      border-radius: 20px;
-      margin-bottom: 24px;
+      color: var(--accent);
+      margin-bottom: 16px;
     }
 
     h1 {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: clamp(2.5rem, 6vw, 3.5rem);
-      font-weight: 600;
-      line-height: 1.15;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text);
       margin-bottom: 20px;
-      font-optical-sizing: auto;
     }
 
-    h1 span {
-      color: var(--accent);
-      font-style: italic;
-    }
-
-    .subtitle {
+    .intro {
       font-size: 1.15rem;
-      color: var(--text-muted);
-      max-width: 500px;
-      margin: 0 auto;
+      color: var(--text-soft);
+      max-width: 540px;
     }
 
-    /* Navigation */
-    nav {
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    /* Table of Contents */
+    .toc {
+      background: var(--bg-warm);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin: 48px 0;
     }
 
-    nav ul {
+    .toc-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 16px;
+    }
+
+    .toc-list {
       list-style: none;
-      display: flex;
-      gap: 32px;
-      justify-content: center;
-      flex-wrap: wrap;
+      display: grid;
+      gap: 10px;
     }
 
-    nav a {
-      color: var(--text-muted);
+    .toc-list a {
+      color: var(--text);
       text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: color 0.2s;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 0;
+      transition: color 0.15s;
     }
 
-    nav a:hover {
+    .toc-list a:hover {
       color: var(--accent);
     }
 
-    /* Focus indicators for accessibility */
-    a:focus-visible,
-    button:focus-visible,
-    .error-header:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
+    .toc-num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      width: 24px;
     }
 
-    nav a:focus-visible {
-      outline-offset: 4px;
-      border-radius: 4px;
+    /* Main content */
+    main {
+      padding: 60px 0 80px;
     }
 
-    .copy-btn:focus-visible {
-      outline-color: #a8a29e;
+    /* Section styling */
+    .section {
+      margin-bottom: 72px;
     }
 
-    /* Sections */
-    section {
-      padding: 60px 0;
-    }
-
-    section + section {
-      border-top: 1px solid var(--border);
+    .section-header {
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border);
     }
 
     h2 {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 1.75rem;
-      font-weight: 500;
-      margin-bottom: 24px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
     }
 
     h3 {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 1.25rem;
-      font-weight: 500;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
       margin: 32px 0 12px;
     }
 
     p {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     a {
       color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    a:hover {
+      text-decoration-thickness: 2px;
+    }
+
+    strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* Key concept box */
+    .key-concept {
+      background: var(--highlight);
+      border-radius: 8px;
+      padding: 24px 28px;
+      margin: 28px 0;
+      border-left: 4px solid #f59e0b;
+    }
+
+    .key-concept-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #92400e;
+      margin-bottom: 8px;
+    }
+
+    .key-concept p {
+      margin: 0;
+      color: #78350f;
+    }
+
+    /* Checklist */
+    .checklist {
+      list-style: none;
+      margin: 24px 0;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .checklist li:last-child {
+      border-bottom: none;
+    }
+
+    .check {
+      width: 26px;
+      height: 26px;
+      background: var(--success-soft);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .check svg {
+      width: 14px;
+      height: 14px;
+      color: var(--success);
     }
 
     /* Steps */
     .step {
-      display: grid;
-      grid-template-columns: 48px 1fr;
-      gap: 20px;
-      margin: 32px 0;
-      align-items: start;
+      margin: 48px 0;
+      padding-left: 72px;
+      position: relative;
     }
 
-    .step-number {
-      width: 48px;
-      height: 48px;
-      background: var(--accent);
+    .step-num {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 52px;
+      height: 52px;
+      background: var(--text);
       color: white;
-      font-family: 'Fraunces', serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 1.25rem;
-      font-weight: 600;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      flex-shrink: 0;
     }
 
-    .step-content h3 {
-      margin-top: 0;
-      margin-bottom: 8px;
+    .step-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      padding-top: 10px;
     }
 
-    .step-content p {
-      color: var(--text-muted);
-      margin-bottom: 12px;
+    .step p {
+      color: var(--text-soft);
     }
 
-    /* Info boxes */
-    .info-box {
-      background: var(--bg-alt);
-      border-radius: 12px;
-      padding: 20px 24px;
-      margin: 24px 0;
+    /* Simple list */
+    ul, ol {
+      margin: 20px 0 20px 28px;
     }
 
-    .info-box.tip {
-      border-left: 4px solid var(--accent);
-    }
-
-    .info-box strong {
-      display: block;
-      margin-bottom: 4px;
+    li {
+      margin-bottom: 10px;
+      padding-left: 4px;
     }
 
     /* Code blocks */
-    .code-wrapper {
-      position: relative;
-      margin: 20px 0;
+    .code-block {
+      margin: 24px 0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
 
     .code-header {
-      background: #2a2622;
-      color: var(--text-muted);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 10px 16px;
-      border-radius: 10px 10px 0 0;
+      background: #292524;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
+    .code-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #a8a29e;
+      letter-spacing: 0.02em;
+    }
+
     .copy-btn {
       background: transparent;
-      border: 1px solid #4a4540;
-      color: #a8a29e;
-      font-size: 12px;
-      padding: 4px 12px;
-      border-radius: 4px;
+      border: 1px solid #57534e;
+      color: #d6d3d1;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 5px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.15s;
     }
 
     .copy-btn:hover {
-      background: #3a3632;
-      color: white;
+      background: #44403c;
+      border-color: #78716c;
     }
 
     .copy-btn.copied {
@@ -300,264 +381,182 @@
     }
 
     pre {
-      background: var(--code-bg);
-      color: var(--code-text);
-      padding: 20px;
-      border-radius: 0 0 10px 10px;
+      background: var(--bg-code);
+      color: var(--text-code);
+      padding: 24px;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.875rem;
+      line-height: 1.7;
       overflow-x: auto;
-      font-size: 14px;
-      line-height: 1.6;
-      font-family: 'SF Mono', 'Fira Code', monospace;
     }
 
-    pre code {
-      color: inherit;
-    }
-
-    .code-comment {
-      color: #6b7280;
-    }
-
-    .code-key {
-      color: #a5d6ff;
-    }
-
-    .code-string {
-      color: #7ee787;
-    }
-
-    .code-value {
-      color: #ffa657;
-    }
+    .hl-key { color: #7dd3fc; }
+    .hl-str { color: #86efac; }
+    .hl-val { color: #fdba74; }
+    .hl-comment { color: #78716c; }
 
     /* Inline code */
     code {
-      background: var(--bg-alt);
-      padding: 2px 8px;
+      background: #fef3c7;
+      color: #92400e;
+      padding: 3px 8px;
       border-radius: 4px;
-      font-size: 0.9em;
-      color: var(--accent);
       font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.875em;
     }
 
-    /* Lists */
-    ul, ol {
-      margin: 16px 0 16px 24px;
+    pre code {
+      background: none;
+      color: inherit;
+      padding: 0;
     }
 
-    li {
-      margin-bottom: 8px;
-    }
-
-    /* Cards */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
+    /* Tip box */
+    .tip {
+      background: var(--success-soft);
+      border-radius: 8px;
+      padding: 20px 24px;
       margin: 24px 0;
-    }
-
-    .card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    }
-
-    .card h4 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.1rem;
-      margin-bottom: 8px;
-    }
-
-    .card p {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin: 0;
-    }
-
-    /* Prerequisites */
-    .prereq-list {
-      list-style: none;
-      margin-left: 0;
-    }
-
-    .prereq-list li {
       display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 0;
+      gap: 16px;
+    }
+
+    .tip-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .tip-content {
+      flex: 1;
+    }
+
+    .tip-content p {
+      margin: 0;
+      color: #14532d;
+      font-size: 0.95rem;
+    }
+
+    /* Warning box */
+    .warning {
+      background: #fef2f2;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      border-left: 4px solid #dc2626;
+    }
+
+    .warning p {
+      margin: 0;
+      color: #7f1d1d;
+      font-size: 0.95rem;
+    }
+
+    /* Schema explainer */
+    .schema-table {
+      width: 100%;
+      margin: 24px 0;
+      border-collapse: collapse;
+    }
+
+    .schema-table th,
+    .schema-table td {
+      text-align: left;
+      padding: 14px 16px;
       border-bottom: 1px solid var(--border);
     }
 
-    .prereq-list li:last-child {
-      border-bottom: none;
-    }
-
-    .check-icon {
-      width: 24px;
-      height: 24px;
-      background: var(--success);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .check-icon::after {
-      content: '✓';
-      color: white;
-      font-size: 14px;
+    .schema-table th {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
       font-weight: 600;
+      color: var(--text-soft);
+      background: var(--bg-warm);
     }
 
-    /* Footer */
-    footer {
-      background: var(--code-bg);
-      color: var(--code-text);
-      padding: 48px 0;
-      margin-top: 60px;
+    .schema-table td:first-child {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      color: var(--text);
+      width: 120px;
     }
 
-    footer .container {
-      text-align: center;
+    .schema-table td:last-child {
+      color: var(--text-soft);
+      font-size: 0.95rem;
     }
 
-    footer p {
-      color: #a8a29e;
-      font-size: 14px;
-    }
-
-    footer a {
-      color: var(--accent);
-    }
-
-    /* Scroll indicator */
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(6px); }
-    }
-
-    .scroll-hint {
-      display: block;
-      text-align: center;
-      margin-top: 40px;
-      color: var(--text-muted);
-      font-size: 24px;
-      animation: bounce 2s infinite;
-    }
-
-    /* Respect reduced motion preferences */
-    @media (prefers-reduced-motion: reduce) {
-      .scroll-hint {
-        animation: none;
-      }
-
-      html {
-        scroll-behavior: auto;
-      }
-
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    /* Troubleshooting Accordion */
+    /* Troubleshooting */
     .error-list {
       list-style: none;
-      margin: 0;
-      padding: 0;
+      margin: 24px 0;
     }
 
     .error-item {
       border: 1px solid var(--border);
       border-radius: 10px;
       margin-bottom: 12px;
-      overflow: hidden;
       background: white;
+      overflow: hidden;
     }
 
-    .error-header {
+    .error-btn {
+      width: 100%;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
       padding: 18px 20px;
-      cursor: pointer;
-      transition: background 0.2s;
-      width: 100%;
-      border: none;
       background: transparent;
+      border: none;
+      cursor: pointer;
       text-align: left;
       font-family: inherit;
+      transition: background 0.15s;
     }
 
-    .error-header:hover {
-      background: var(--bg-alt);
+    .error-btn:hover {
+      background: var(--bg-warm);
     }
 
-    .error-header:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: -2px;
+    .error-code {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: white;
+      background: #dc2626;
+      padding: 6px 10px;
+      border-radius: 6px;
+      min-width: 44px;
+      text-align: center;
     }
 
-    .error-icon {
-      width: 32px;
-      height: 32px;
-      background: #fee2e2;
-      color: #dc2626;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 14px;
-      flex-shrink: 0;
+    .error-code.warn {
+      background: #d97706;
     }
 
-    .error-icon.warning {
-      background: #fef3c7;
-      color: #d97706;
+    .error-code.info {
+      background: #2563eb;
     }
 
-    .error-icon.info {
-      background: #dbeafe;
-      color: #2563eb;
-    }
-
-    .error-title {
+    .error-info {
       flex: 1;
     }
 
-    .error-title strong {
-      display: block;
-      font-size: 15px;
+    .error-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
       margin-bottom: 2px;
     }
 
-    .error-title span {
-      font-size: 13px;
-      color: var(--text-muted);
+    .error-desc {
+      font-size: 0.9rem;
+      color: var(--text-soft);
     }
 
     .error-toggle {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      transition: transform 0.3s;
+      color: var(--text-soft);
+      transition: transform 0.2s;
     }
 
     .error-item.open .error-toggle {
@@ -575,114 +574,94 @@
     }
 
     .error-body h4 {
-      font-family: 'Fraunces', serif;
-      font-size: 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem;
       font-weight: 600;
-      margin: 16px 0 8px;
       color: var(--text);
+      margin: 20px 0 8px;
     }
 
-    .error-body p,
-    .error-body li {
-      font-size: 15px;
-      color: var(--text-muted);
+    .error-body p {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      margin-bottom: 12px;
     }
 
     .error-body ul {
-      margin: 8px 0 8px 20px;
+      margin: 12px 0 12px 24px;
     }
 
-    .error-body code {
-      font-size: 13px;
+    .error-body li {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      margin-bottom: 8px;
     }
 
-    .quick-check {
-      background: var(--accent-light);
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-top: 12px;
-      font-size: 14px;
-    }
-
-    .quick-check strong {
-      color: var(--accent);
-    }
-
-    /* Schema Explainer */
-    .schema-explainer {
-      background: white;
-      border: 1px solid var(--border);
+    /* Resources */
+    .resources {
+      background: var(--bg-warm);
       border-radius: 12px;
-      overflow: hidden;
-      margin: 20px 0;
+      padding: 28px 32px;
+      margin: 32px 0;
     }
 
-    .schema-part {
-      display: grid;
-      grid-template-columns: 120px 1fr;
-      border-bottom: 1px solid var(--border);
+    .resources h3 {
+      margin-top: 0;
     }
 
-    .schema-part:last-child {
-      border-bottom: none;
+    .resources ul {
+      margin-bottom: 0;
     }
 
-    .schema-label {
-      background: var(--bg-alt);
-      padding: 14px 16px;
-      font-weight: 600;
-      font-size: 13px;
-      color: var(--text);
-      display: flex;
-      align-items: center;
+    /* Footer */
+    footer {
+      background: var(--text);
+      color: var(--bg);
+      padding: 48px 0;
+      text-align: center;
     }
 
-    .schema-desc {
-      padding: 14px 16px;
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.5;
+    footer p {
+      font-size: 0.95rem;
+      color: #a8a29e;
+      margin-bottom: 8px;
     }
 
-    .schema-desc code {
-      font-size: 12px;
-    }
-
-    @media (max-width: 600px) {
-      .schema-part {
-        grid-template-columns: 1fr;
-      }
-
-      .schema-label {
-        padding: 10px 16px;
-        border-bottom: 1px solid var(--border);
-      }
+    footer a {
+      color: var(--accent-soft);
     }
 
     /* Responsive */
-    @media (max-width: 600px) {
-      header {
-        padding: 60px 0 40px;
+    @media (max-width: 640px) {
+      html {
+        font-size: 16px;
+      }
+
+      h1 {
+        font-size: 2rem;
       }
 
       .step {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        padding-left: 0;
+        padding-top: 64px;
       }
 
-      .step-number {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
+      .step-num {
+        top: 0;
+        left: 0;
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
       }
 
-      nav ul {
-        gap: 16px;
+      .toc {
+        padding: 20px 24px;
       }
 
-      pre {
-        font-size: 13px;
-        padding: 16px;
+      .schema-table th,
+      .schema-table td {
+        padding: 12px;
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -692,113 +671,127 @@
 
   <header>
     <div class="container">
-      <span class="badge">Beginner Friendly</span>
-      <h1>Build a GPT That <span>Actually Does Things</span></h1>
-      <p class="subtitle">Learn how to create custom GPTs with Actions — connect to databases, search the web, and automate tasks.</p>
-      <span class="scroll-hint">↓</span>
+      <p class="eyebrow">Step-by-step guide</p>
+      <h1>Build a GPT That Connects to Real Services</h1>
+      <p class="intro">Learn how to create a custom GPT that saves data to Airtable, searches the web, and actually does things — not just chat.</p>
     </div>
   </header>
 
-  <nav>
-    <div class="container">
-      <ul>
-        <li><a href="#what">What Are Actions?</a></li>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#steps">Build It</a></li>
-        <li><a href="#example">Full Example</a></li>
-        <li><a href="#troubleshooting">Troubleshooting</a></li>
-      </ul>
-    </div>
-  </nav>
+  <div class="container">
+    <nav class="toc" aria-label="Table of contents">
+      <p class="toc-title">What we'll cover</p>
+      <ol class="toc-list">
+        <li><a href="#what"><span class="toc-num">1.</span> What are GPT Actions?</a></li>
+        <li><a href="#need"><span class="toc-num">2.</span> What you'll need</a></li>
+        <li><a href="#build"><span class="toc-num">3.</span> Build it (6 steps)</a></li>
+        <li><a href="#troubleshoot"><span class="toc-num">4.</span> Troubleshooting</a></li>
+      </ol>
+    </nav>
+  </div>
 
   <main id="main-content" class="container">
-    <section id="what">
-      <h2>What Are GPT Actions?</h2>
-      <p>By default, custom GPTs can only chat. <strong>Actions</strong> let them interact with external services — save data to spreadsheets, fetch information from APIs, send emails, and more.</p>
 
-      <p>Think of Actions as teaching your GPT new skills beyond conversation.</p>
+    <!-- Section 1: What are GPT Actions -->
+    <section id="what" class="section">
+      <div class="section-header">
+        <h2>What are GPT Actions?</h2>
+      </div>
 
-      <div class="card-grid">
-        <div class="card">
-          <h4>📊 Save Data</h4>
-          <p>Store information in Airtable, Notion, Google Sheets, or any database.</p>
-        </div>
-        <div class="card">
-          <h4>🔍 Fetch Info</h4>
-          <p>Pull data from job boards, weather APIs, or your own services.</p>
-        </div>
-        <div class="card">
-          <h4>📧 Take Action</h4>
-          <p>Send emails, create calendar events, post to Slack, and more.</p>
-        </div>
+      <p>By default, custom GPTs can only have conversations. They can't save data, fetch live information, or connect to other services.</p>
+
+      <p><strong>Actions</strong> change that. They let your GPT talk to external services through their APIs — like saving job listings to a spreadsheet, fetching weather data, or sending emails.</p>
+
+      <div class="key-concept">
+        <p class="key-concept-title">Think of it this way</p>
+        <p>Actions are like teaching your GPT to use apps on your behalf. You're giving it permission to press buttons in other services.</p>
       </div>
     </section>
 
-    <section id="prerequisites">
-      <h2>Before You Start</h2>
-      <ul class="prereq-list">
+    <!-- Section 2: What you'll need -->
+    <section id="need" class="section">
+      <div class="section-header">
+        <h2>What you'll need</h2>
+      </div>
+
+      <ul class="checklist">
         <li>
-          <span class="check-icon" aria-hidden="true"></span><span class="sr-only">Requirement met:</span>
-          <span><strong>ChatGPT Plus, Team, or Enterprise</strong> — Custom GPTs require a paid plan ($20/month for Plus)</span>
+          <span class="check" aria-hidden="true">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </span>
+          <span><span class="sr-only">Required: </span><strong>ChatGPT Plus, Team, or Enterprise</strong> — Custom GPTs require a paid plan ($20/month for Plus)</span>
         </li>
         <li>
-          <span class="check-icon" aria-hidden="true"></span><span class="sr-only">Requirement met:</span>
-          <span><strong>An external service with an API</strong> — We'll use Airtable (free tier works great)</span>
+          <span class="check" aria-hidden="true">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </span>
+          <span><span class="sr-only">Required: </span><strong>An Airtable account</strong> — Free tier works perfectly for this tutorial</span>
         </li>
         <li>
-          <span class="check-icon" aria-hidden="true"></span><span class="sr-only">Requirement met:</span>
-          <span><strong>15-20 minutes</strong> — That's all it takes!</span>
+          <span class="check" aria-hidden="true">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </span>
+          <span><span class="sr-only">Required: </span><strong>15–20 minutes</strong> — That's all it takes</span>
         </li>
       </ul>
     </section>
 
-    <section id="steps">
-      <h2>Let's Build It</h2>
-      <p>We'll create a GPT that saves internship opportunities to an Airtable database — perfect for job hunting.</p>
-
-      <div class="step">
-        <span class="step-number">1</span>
-        <div class="step-content">
-          <h3>Set Up Your Airtable Base</h3>
-          <p>Go to <a href="https://airtable.com" target="_blank" rel="noopener noreferrer">airtable.com</a> and create a free account. Create a new base called "Internships" with these columns:</p>
-          <ul>
-            <li><strong>Company</strong> (Single line text)</li>
-            <li><strong>Role</strong> (Single line text)</li>
-            <li><strong>Location</strong> (Single line text)</li>
-            <li><strong>Link</strong> (URL)</li>
-            <li><strong>Notes</strong> (Long text)</li>
-          </ul>
-        </div>
+    <!-- Section 3: Build it -->
+    <section id="build" class="section">
+      <div class="section-header">
+        <h2>Build it: 6 steps</h2>
       </div>
 
+      <p>We'll create a GPT that saves internship opportunities to an Airtable database. You can adapt this for any use case.</p>
+
+      <!-- Step 1 -->
       <div class="step">
-        <span class="step-number">2</span>
-        <div class="step-content">
-          <h3>Get Your Airtable Credentials</h3>
-          <p>You'll need two things from Airtable:</p>
-          <ol>
-            <li>Go to <a href="https://airtable.com/create/tokens" target="_blank" rel="noopener noreferrer">airtable.com/create/tokens</a> and create a Personal Access Token with <code>data.records:write</code> scope</li>
-            <li>Open your base and copy the Base ID from the URL: <code>airtable.com/<strong>appXXXXXXXX</strong>/...</code></li>
-          </ol>
-          <div class="info-box tip">
-            <strong>💡 Keep these safe!</strong>
-            You'll paste these into ChatGPT in a moment.
+        <span class="step-num">1</span>
+        <h3 class="step-title">Create your Airtable base</h3>
+        <p>Go to <a href="https://airtable.com" target="_blank" rel="noopener noreferrer">airtable.com</a> and create a free account. Then create a new base called "Internships" with these columns:</p>
+        <ul>
+          <li><strong>Company</strong> — Single line text</li>
+          <li><strong>Role</strong> — Single line text</li>
+          <li><strong>Location</strong> — Single line text</li>
+          <li><strong>Link</strong> — URL</li>
+          <li><strong>Notes</strong> — Long text</li>
+        </ul>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step">
+        <span class="step-num">2</span>
+        <h3 class="step-title">Get your Airtable credentials</h3>
+        <p>You need two pieces of information from Airtable:</p>
+        <ol>
+          <li><strong>API Token:</strong> Go to <a href="https://airtable.com/create/tokens" target="_blank" rel="noopener noreferrer">airtable.com/create/tokens</a> and create a Personal Access Token. Give it the <code>data.records:write</code> permission.</li>
+          <li><strong>Base ID:</strong> Open your base and look at the URL. Copy the part that starts with <code>app</code> — for example: <code>appABC123xyz</code></li>
+        </ol>
+        <div class="tip">
+          <span class="tip-icon" aria-hidden="true">💡</span>
+          <div class="tip-content">
+            <p>Save both of these somewhere safe. You'll paste them into ChatGPT in a moment.</p>
           </div>
         </div>
       </div>
 
+      <!-- Step 3 -->
       <div class="step">
-        <span class="step-number">3</span>
-        <div class="step-content">
-          <h3>Create Your Custom GPT</h3>
-          <p>In ChatGPT, click your profile → <strong>My GPTs</strong> → <strong>Create a GPT</strong></p>
-          <p>Give it a name like "Internship Hunter" and add instructions:</p>
-          <div class="code-wrapper">
-            <div class="code-header">
-              <span>Instructions</span>
-              <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
-            </div>
-            <pre><code>You help users find and track internship opportunities.
+        <span class="step-num">3</span>
+        <h3 class="step-title">Create your custom GPT</h3>
+        <p>In ChatGPT, click your profile picture → <strong>My GPTs</strong> → <strong>Create a GPT</strong></p>
+        <p>Give it a name like "Internship Hunter" and paste these instructions:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-label">GPT Instructions</span>
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy instructions to clipboard">Copy</button>
+          </div>
+          <pre><code>You help users find and track internship opportunities.
 
 When the user shares a job posting or describes an opportunity:
 1. Extract the company name, role, location, and application link
@@ -807,379 +800,283 @@ When the user shares a job posting or describes an opportunity:
 
 You can also search the web for internships when asked.
 Be encouraging and helpful — job hunting is stressful!</code></pre>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step">
+        <span class="step-num">4</span>
+        <h3 class="step-title">Add the Action</h3>
+
+        <p>This is the key step. Scroll down to <strong>Actions</strong> → <strong>Create new action</strong></p>
+
+        <div class="key-concept">
+          <p class="key-concept-title">What is an OpenAPI schema?</p>
+          <p>It's a "menu" that tells the GPT what the API can do. It describes: where to send requests, what data to include, and what responses to expect. The GPT reads this menu to know how to talk to Airtable.</p>
+        </div>
+
+        <p>Paste this schema into the action editor. <strong>Replace <code>YOUR_BASE_ID</code></strong> with your actual Base ID from Step 2:</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-label">OpenAPI Schema (YAML)</span>
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy schema to clipboard">Copy</button>
+          </div>
+          <pre><code><span class="hl-key">openapi</span>: <span class="hl-str">"3.1.0"</span>
+<span class="hl-key">info</span>:
+  <span class="hl-key">title</span>: <span class="hl-str">"Airtable Internships"</span>
+  <span class="hl-key">version</span>: <span class="hl-str">"1.0.0"</span>
+  <span class="hl-key">description</span>: <span class="hl-str">"Save internship opportunities to Airtable"</span>
+<span class="hl-key">servers</span>:
+  - <span class="hl-key">url</span>: <span class="hl-str">"https://api.airtable.com/v0/YOUR_BASE_ID"</span>
+<span class="hl-key">paths</span>:
+  <span class="hl-key">/Internships</span>:
+    <span class="hl-key">post</span>:
+      <span class="hl-key">operationId</span>: <span class="hl-str">"addInternship"</span>
+      <span class="hl-key">summary</span>: <span class="hl-str">"Add an internship to the database"</span>
+      <span class="hl-key">requestBody</span>:
+        <span class="hl-key">required</span>: <span class="hl-val">true</span>
+        <span class="hl-key">content</span>:
+          <span class="hl-key">application/json</span>:
+            <span class="hl-key">schema</span>:
+              <span class="hl-key">type</span>: <span class="hl-str">"object"</span>
+              <span class="hl-key">properties</span>:
+                <span class="hl-key">fields</span>:
+                  <span class="hl-key">type</span>: <span class="hl-str">"object"</span>
+                  <span class="hl-key">properties</span>:
+                    <span class="hl-key">Company</span>:
+                      <span class="hl-key">type</span>: <span class="hl-str">"string"</span>
+                      <span class="hl-key">description</span>: <span class="hl-str">"Company name"</span>
+                    <span class="hl-key">Role</span>:
+                      <span class="hl-key">type</span>: <span class="hl-str">"string"</span>
+                      <span class="hl-key">description</span>: <span class="hl-str">"Job title"</span>
+                    <span class="hl-key">Location</span>:
+                      <span class="hl-key">type</span>: <span class="hl-str">"string"</span>
+                      <span class="hl-key">description</span>: <span class="hl-str">"Job location"</span>
+                    <span class="hl-key">Link</span>:
+                      <span class="hl-key">type</span>: <span class="hl-str">"string"</span>
+                      <span class="hl-key">description</span>: <span class="hl-str">"Application URL"</span>
+                    <span class="hl-key">Notes</span>:
+                      <span class="hl-key">type</span>: <span class="hl-str">"string"</span>
+                      <span class="hl-key">description</span>: <span class="hl-str">"Additional notes"</span>
+                  <span class="hl-key">required</span>:
+                    - <span class="hl-str">"Company"</span>
+                    - <span class="hl-str">"Role"</span>
+      <span class="hl-key">responses</span>:
+        <span class="hl-str">"200"</span>:
+          <span class="hl-key">description</span>: <span class="hl-str">"Successfully added"</span></code></pre>
+        </div>
+
+        <h3>Understanding the schema</h3>
+        <p>Here's what each part does:</p>
+
+        <table class="schema-table">
+          <thead>
+            <tr>
+              <th>Part</th>
+              <th>What it means</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>servers → url</td>
+              <td><strong>This is where you put your Base ID.</strong> It's the address where requests get sent.</td>
+            </tr>
+            <tr>
+              <td>/Internships</td>
+              <td>Your table name. Must match exactly, including capitalization.</td>
+            </tr>
+            <tr>
+              <td>post</td>
+              <td>We're creating new records. Use <code>get</code> to read, <code>patch</code> to update.</td>
+            </tr>
+            <tr>
+              <td>properties</td>
+              <td>Your Airtable columns. Names must match exactly.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="warning">
+          <p><strong>Common mistake:</strong> If your table name has a space (like "Job Listings"), encode it as <code>/Job%20Listings</code></p>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step">
+        <span class="step-num">5</span>
+        <h3 class="step-title">Add authentication</h3>
+        <p>Below the schema editor, click <strong>Authentication</strong> and configure:</p>
+        <ul>
+          <li><strong>Authentication type:</strong> API Key</li>
+          <li><strong>API Key:</strong> Paste your Personal Access Token from Step 2</li>
+          <li><strong>Auth Type:</strong> Bearer</li>
+        </ul>
+        <p>Click <strong>Save</strong>, then click <strong>Update</strong> (or <strong>Create</strong>) in the top right corner.</p>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="step">
+        <span class="step-num">6</span>
+        <h3 class="step-title">Test it!</h3>
+        <p>Open your new GPT and try this message:</p>
+        <div class="key-concept">
+          <p>"I found an internship at Stripe for a Software Engineering Intern in San Francisco. Here's the link: stripe.com/jobs/123"</p>
+        </div>
+        <p>Your GPT should save it to Airtable and confirm. Open your Airtable base — the data should appear!</p>
+
+        <div class="tip">
+          <span class="tip-icon" aria-hidden="true">🎉</span>
+          <div class="tip-content">
+            <p><strong>Congratulations!</strong> Your GPT can now save data to a real database. Try asking it to search for internships online, too — that's built-in.</p>
           </div>
         </div>
       </div>
 
-      <div class="step">
-        <span class="step-number">4</span>
-        <div class="step-content">
-          <h3>Add the Action</h3>
-          <p>Scroll down to <strong>Actions</strong> → <strong>Create new action</strong></p>
-
-          <div class="info-box tip">
-            <strong>What is an OpenAPI schema?</strong>
-            Think of it as a "menu" for your API. It tells the GPT: "Here's what you can order (endpoints), here's what info you need to provide (fields), and here's where to send it (the URL)." The GPT reads this menu to know how to talk to Airtable.
-          </div>
-
-          <p>Paste this schema into the action editor. <strong>You only need to change ONE thing:</strong> replace <code>YOUR_BASE_ID</code> with your actual Base ID from Step 2.</p>
-          <div class="code-wrapper">
-            <div class="code-header">
-              <span>OpenAPI Schema (YAML)</span>
-              <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy code to clipboard">Copy</button>
-            </div>
-            <pre><code><span class="code-key">openapi</span>: <span class="code-string">"3.1.0"</span>
-<span class="code-key">info</span>:
-  <span class="code-key">title</span>: <span class="code-string">"Airtable Internships"</span>
-  <span class="code-key">version</span>: <span class="code-string">"1.0.0"</span>
-  <span class="code-key">description</span>: <span class="code-string">"Save internship opportunities to Airtable"</span>
-<span class="code-key">servers</span>:
-  - <span class="code-key">url</span>: <span class="code-string">"https://api.airtable.com/v0/YOUR_BASE_ID"</span>
-<span class="code-key">paths</span>:
-  <span class="code-key">/Internships</span>:
-    <span class="code-key">post</span>:
-      <span class="code-key">operationId</span>: <span class="code-string">"addInternship"</span>
-      <span class="code-key">summary</span>: <span class="code-string">"Add an internship to the database"</span>
-      <span class="code-key">requestBody</span>:
-        <span class="code-key">required</span>: <span class="code-value">true</span>
-        <span class="code-key">content</span>:
-          <span class="code-key">application/json</span>:
-            <span class="code-key">schema</span>:
-              <span class="code-key">type</span>: <span class="code-string">"object"</span>
-              <span class="code-key">properties</span>:
-                <span class="code-key">fields</span>:
-                  <span class="code-key">type</span>: <span class="code-string">"object"</span>
-                  <span class="code-key">properties</span>:
-                    <span class="code-key">Company</span>:
-                      <span class="code-key">type</span>: <span class="code-string">"string"</span>
-                      <span class="code-key">description</span>: <span class="code-string">"Company name"</span>
-                    <span class="code-key">Role</span>:
-                      <span class="code-key">type</span>: <span class="code-string">"string"</span>
-                      <span class="code-key">description</span>: <span class="code-string">"Job title"</span>
-                    <span class="code-key">Location</span>:
-                      <span class="code-key">type</span>: <span class="code-string">"string"</span>
-                      <span class="code-key">description</span>: <span class="code-string">"Job location"</span>
-                    <span class="code-key">Link</span>:
-                      <span class="code-key">type</span>: <span class="code-string">"string"</span>
-                      <span class="code-key">description</span>: <span class="code-string">"Application URL"</span>
-                    <span class="code-key">Notes</span>:
-                      <span class="code-key">type</span>: <span class="code-string">"string"</span>
-                      <span class="code-key">description</span>: <span class="code-string">"Additional notes"</span>
-                  <span class="code-key">required</span>:
-                    - <span class="code-string">"Company"</span>
-                    - <span class="code-string">"Role"</span>
-      <span class="code-key">responses</span>:
-        <span class="code-string">"200"</span>:
-          <span class="code-key">description</span>: <span class="code-string">"Successfully added"</span></code></pre>
-          </div>
-
-          <h3>Breaking Down the Schema</h3>
-          <p>Here's what each part means (you don't need to memorize this — just understand the structure):</p>
-
-          <div class="schema-explainer">
-            <div class="schema-part">
-              <div class="schema-label">Header</div>
-              <div class="schema-desc">
-                <code>openapi</code>, <code>info</code> — Just metadata. Tells the system this is a valid OpenAPI 3.1 file.
-              </div>
-            </div>
-            <div class="schema-part">
-              <div class="schema-label">Server URL</div>
-              <div class="schema-desc">
-                <code>servers → url</code> — <strong>This is where you put your Base ID!</strong> It's the address where requests go: <code>https://api.airtable.com/v0/<strong>appXXXXXX</strong></code>
-              </div>
-            </div>
-            <div class="schema-part">
-              <div class="schema-label">Path</div>
-              <div class="schema-desc">
-                <code>/Internships</code> — The table name. Must <strong>exactly match</strong> your Airtable table name (case-sensitive!).
-              </div>
-            </div>
-            <div class="schema-part">
-              <div class="schema-label">Method</div>
-              <div class="schema-desc">
-                <code>post</code> — We're creating new records. (Use <code>get</code> to read, <code>patch</code> to update, <code>delete</code> to remove.)
-              </div>
-            </div>
-            <div class="schema-part">
-              <div class="schema-label">Fields</div>
-              <div class="schema-desc">
-                <code>properties → Company, Role, etc.</code> — These are your Airtable columns. Names must match exactly. The <code>description</code> helps the GPT understand what to put in each field.
-              </div>
-            </div>
-          </div>
-
-          <div class="info-box">
-            <strong>Common mistake:</strong> If your Airtable table is named "Job Listings" (with a space), the path must be <code>/Job%20Listings</code> — spaces become <code>%20</code>.
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step-number">5</span>
-        <div class="step-content">
-          <h3>Add Authentication</h3>
-          <p>Below the schema, click <strong>Authentication</strong> → <strong>API Key</strong></p>
-          <ul>
-            <li><strong>API Key:</strong> Paste your Personal Access Token</li>
-            <li><strong>Auth Type:</strong> Bearer</li>
-          </ul>
-          <p>Click <strong>Save</strong>, then <strong>Update</strong> (or <strong>Create</strong>) in the top right!</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step-number">6</span>
-        <div class="step-content">
-          <h3>Test It Out!</h3>
-          <p>Open your new GPT and try:</p>
-          <div class="info-box">
-            <em>"I found an internship at Stripe for a Software Engineering Intern in San Francisco. Here's the link: stripe.com/jobs/123"</em>
-          </div>
-          <p>Your GPT should save it to Airtable and confirm. Check your Airtable base — the data should appear!</p>
-        </div>
+      <div class="resources">
+        <h3>Helpful resources</h3>
+        <ul>
+          <li><a href="https://platform.openai.com/docs/actions" target="_blank" rel="noopener noreferrer">OpenAI Actions Documentation</a></li>
+          <li><a href="https://airtable.com/developers/web/api/introduction" target="_blank" rel="noopener noreferrer">Airtable API Documentation</a></li>
+          <li><a href="https://swagger.io/specification/" target="_blank" rel="noopener noreferrer">OpenAPI Specification Reference</a></li>
+        </ul>
       </div>
     </section>
 
-    <section id="example">
-      <h2>The Complete Use Case</h2>
-      <p>Here's what your son's Internship Hunter GPT can do:</p>
-
-      <ul>
-        <li><strong>🔍 Search the web</strong> — "Find software engineering internships in NYC" (built-in, no action needed)</li>
-        <li><strong>💾 Save to database</strong> — Automatically logs opportunities to Airtable</li>
-        <li><strong>✍️ Write cover letters</strong> — "Write a cover letter for the Stripe internship" (built-in)</li>
-        <li><strong>📋 Track applications</strong> — "What internships have I saved so far?"</li>
-      </ul>
-
-      <div class="info-box tip">
-        <strong>💡 Going further</strong>
-        Add more actions to read from the database, mark applications as "applied", or integrate with Google Calendar for interview scheduling!
+    <!-- Section 4: Troubleshooting -->
+    <section id="troubleshoot" class="section">
+      <div class="section-header">
+        <h2>Troubleshooting</h2>
       </div>
 
-      <h3>Helpful Resources</h3>
-      <ul>
-        <li><a href="https://platform.openai.com/docs/actions" target="_blank" rel="noopener noreferrer">OpenAI Actions Documentation</a></li>
-        <li><a href="https://airtable.com/developers/web/api/introduction" target="_blank" rel="noopener noreferrer">Airtable API Docs</a></li>
-        <li><a href="https://swagger.io/specification/" target="_blank" rel="noopener noreferrer">OpenAPI Specification Reference</a></li>
-      </ul>
-    </section>
-
-    <section id="troubleshooting">
-      <h2>Troubleshooting</h2>
-      <p>Running into issues? Here are the most common problems and how to fix them.</p>
+      <p>Running into errors? Here are the most common issues and how to fix them.</p>
 
       <ul class="error-list">
-        <!-- Error 1: 401 Unauthorized -->
         <li class="error-item">
-          <button class="error-header" type="button" aria-expanded="false" onclick="toggleError(this)">
-            <span class="error-icon">401</span>
-            <div class="error-title">
-              <strong>Authentication Failed / Unauthorized</strong>
-              <span>The API rejected your credentials</span>
+          <button class="error-btn" type="button" aria-expanded="false" onclick="toggleError(this)">
+            <span class="error-code">401</span>
+            <div class="error-info">
+              <p class="error-title">Authentication Failed</p>
+              <p class="error-desc">The API rejected your credentials</p>
             </div>
             <span class="error-toggle" aria-hidden="true">▼</span>
           </button>
           <div class="error-body">
             <h4>Why this happens</h4>
             <p>Your API key is missing, incorrect, or doesn't have the right permissions.</p>
-
             <h4>How to fix it</h4>
             <ul>
-              <li>Double-check you selected <strong>Bearer</strong> as the Auth Type (not "Basic" or "Custom")</li>
-              <li>Make sure you copied the <em>entire</em> API key — they're long!</li>
-              <li>Verify your Airtable token has the <code>data.records:write</code> scope</li>
-              <li>Check that the token has access to the specific base you're using</li>
+              <li>Make sure you selected <strong>Bearer</strong> as the Auth Type</li>
+              <li>Check that you copied the entire API key — they're long!</li>
+              <li>Verify your token has the <code>data.records:write</code> permission</li>
             </ul>
-
-            <div class="quick-check">
-              <strong>Quick test:</strong> Try your token in the <a href="https://airtable.com/developers/web/api/introduction" target="_blank" rel="noopener noreferrer">Airtable API playground</a> to verify it works.
-            </div>
           </div>
         </li>
 
-        <!-- Error 2: 404 Not Found -->
         <li class="error-item">
-          <button class="error-header" type="button" aria-expanded="false" onclick="toggleError(this)">
-            <span class="error-icon">404</span>
-            <div class="error-title">
-              <strong>Table or Base Not Found</strong>
-              <span>The API can't find what you're looking for</span>
+          <button class="error-btn" type="button" aria-expanded="false" onclick="toggleError(this)">
+            <span class="error-code">404</span>
+            <div class="error-info">
+              <p class="error-title">Table or Base Not Found</p>
+              <p class="error-desc">The API can't find what you're looking for</p>
             </div>
             <span class="error-toggle" aria-hidden="true">▼</span>
           </button>
           <div class="error-body">
             <h4>Why this happens</h4>
-            <p>The Base ID in your schema URL or the table name in the path doesn't match what's in Airtable.</p>
-
+            <p>The Base ID or table name in your schema doesn't match what's in Airtable.</p>
             <h4>How to fix it</h4>
             <ul>
-              <li>Check your Base ID — it starts with <code>app</code> (e.g., <code>appABC123xyz</code>)</li>
-              <li>The table name in your path must <strong>exactly match</strong> your Airtable table name, including capitalization</li>
-              <li>If your table is named "Internships", the path should be <code>/Internships</code></li>
-              <li>Spaces in table names need to be URL-encoded: "Job List" → <code>/Job%20List</code></li>
+              <li>Check your Base ID — it should start with <code>app</code></li>
+              <li>Make sure your table name matches exactly (case-sensitive)</li>
+              <li>Encode spaces as <code>%20</code></li>
             </ul>
-
-            <div class="quick-check">
-              <strong>Quick test:</strong> Open your Airtable base and check the URL — it contains your Base ID right after <code>airtable.com/</code>
-            </div>
           </div>
         </li>
 
-        <!-- Error 3: 422 Unprocessable Entity -->
         <li class="error-item">
-          <button class="error-header" type="button" aria-expanded="false" onclick="toggleError(this)">
-            <span class="error-icon">422</span>
-            <div class="error-title">
-              <strong>Invalid Field Names or Data</strong>
-              <span>The data structure doesn't match Airtable's expectations</span>
+          <button class="error-btn" type="button" aria-expanded="false" onclick="toggleError(this)">
+            <span class="error-code">422</span>
+            <div class="error-info">
+              <p class="error-title">Invalid Field Names</p>
+              <p class="error-desc">The data structure doesn't match Airtable</p>
             </div>
             <span class="error-toggle" aria-hidden="true">▼</span>
           </button>
           <div class="error-body">
             <h4>Why this happens</h4>
-            <p>The field names in your schema don't match your Airtable column names, or you're sending the wrong data type.</p>
-
+            <p>Field names in your schema don't match your Airtable column names.</p>
             <h4>How to fix it</h4>
             <ul>
-              <li>Field names are <strong>case-sensitive</strong>: "Company" ≠ "company"</li>
-              <li>Check for typos in field names</li>
-              <li>Make sure you're using the correct data types (strings for text, numbers for numeric fields)</li>
-              <li>Airtable expects data wrapped in a <code>fields</code> object — the schema above handles this</li>
+              <li>Field names are case-sensitive: "Company" ≠ "company"</li>
+              <li>Copy column names directly from Airtable to avoid typos</li>
             </ul>
-
-            <div class="quick-check">
-              <strong>Quick test:</strong> Open Airtable and copy/paste the exact column names into your schema to avoid typos.
-            </div>
           </div>
         </li>
 
-        <!-- Error 4: Schema Validation Error -->
         <li class="error-item">
-          <button class="error-header" type="button" aria-expanded="false" onclick="toggleError(this)">
-            <span class="error-icon warning">!</span>
-            <div class="error-title">
-              <strong>Schema Validation Error</strong>
-              <span>ChatGPT can't parse your OpenAPI schema</span>
+          <button class="error-btn" type="button" aria-expanded="false" onclick="toggleError(this)">
+            <span class="error-code warn">!</span>
+            <div class="error-info">
+              <p class="error-title">Schema Validation Error</p>
+              <p class="error-desc">ChatGPT can't parse your schema</p>
             </div>
             <span class="error-toggle" aria-hidden="true">▼</span>
           </button>
           <div class="error-body">
             <h4>Why this happens</h4>
-            <p>Your YAML/JSON has syntax errors — usually indentation or missing quotes.</p>
-
+            <p>Your YAML has syntax errors — usually indentation or missing quotes.</p>
             <h4>How to fix it</h4>
             <ul>
-              <li>YAML is <strong>indentation-sensitive</strong> — use consistent spaces (2 spaces per level)</li>
-              <li>Never mix tabs and spaces</li>
+              <li>YAML uses spaces for indentation (2 spaces per level), not tabs</li>
               <li>Wrap URLs and special characters in quotes</li>
-              <li>Check for missing colons after property names</li>
+              <li>Use a <a href="https://jsonformatter.org/yaml-validator" target="_blank" rel="noopener noreferrer">YAML validator</a> to check for errors</li>
             </ul>
-
-            <div class="quick-check">
-              <strong>Quick test:</strong> Paste your schema into <a href="https://jsonformatter.org/yaml-validator" target="_blank" rel="noopener noreferrer">a YAML validator</a> to find syntax errors.
-            </div>
           </div>
         </li>
 
-        <!-- Error 5: GPT not calling the action -->
         <li class="error-item">
-          <button class="error-header" type="button" aria-expanded="false" onclick="toggleError(this)">
-            <span class="error-icon info">?</span>
-            <div class="error-title">
-              <strong>GPT Doesn't Use the Action</strong>
-              <span>The GPT responds but never calls Airtable</span>
+          <button class="error-btn" type="button" aria-expanded="false" onclick="toggleError(this)">
+            <span class="error-code info">?</span>
+            <div class="error-info">
+              <p class="error-title">GPT Doesn't Use the Action</p>
+              <p class="error-desc">It responds but never calls Airtable</p>
             </div>
             <span class="error-toggle" aria-hidden="true">▼</span>
           </button>
           <div class="error-body">
             <h4>Why this happens</h4>
-            <p>The GPT doesn't know when to use the action, or the action isn't properly configured.</p>
-
+            <p>The GPT doesn't know when to use the action.</p>
             <h4>How to fix it</h4>
             <ul>
-              <li>Add clear instructions telling the GPT <em>when</em> to use the action (see Step 3)</li>
-              <li>Make sure the action has a descriptive <code>summary</code> and <code>description</code></li>
-              <li>Try explicitly asking: "Save this to the database"</li>
-              <li>Check that you clicked <strong>Save</strong> after adding the action</li>
-              <li>Verify the action appears in the GPT's configuration panel</li>
-            </ul>
-
-            <div class="quick-check">
-              <strong>Quick test:</strong> Ask the GPT "What actions do you have available?" — it should describe the Airtable action.
-            </div>
-          </div>
-        </li>
-
-        <!-- Error 6: Rate Limiting -->
-        <li class="error-item">
-          <button class="error-header" type="button" aria-expanded="false" onclick="toggleError(this)">
-            <span class="error-icon">429</span>
-            <div class="error-title">
-              <strong>Too Many Requests / Rate Limited</strong>
-              <span>You've hit Airtable's API limits</span>
-            </div>
-            <span class="error-toggle" aria-hidden="true">▼</span>
-          </button>
-          <div class="error-body">
-            <h4>Why this happens</h4>
-            <p>Airtable's free tier limits you to 5 requests per second. If you're saving lots of data quickly, you'll hit this limit.</p>
-
-            <h4>How to fix it</h4>
-            <ul>
-              <li>Wait a few seconds and try again</li>
-              <li>For bulk operations, save items one at a time with pauses between</li>
-              <li>Consider upgrading to Airtable's paid plan for higher limits</li>
-            </ul>
-
-            <div class="quick-check">
-              <strong>Good news:</strong> For normal use (saving a few internships at a time), you won't hit this limit.
-            </div>
-          </div>
-        </li>
-
-        <!-- Error 7: CORS Error -->
-        <li class="error-item">
-          <button class="error-header" type="button" aria-expanded="false" onclick="toggleError(this)">
-            <span class="error-icon warning">!</span>
-            <div class="error-title">
-              <strong>Network or Connection Error</strong>
-              <span>The request failed to reach the API</span>
-            </div>
-            <span class="error-toggle" aria-hidden="true">▼</span>
-          </button>
-          <div class="error-body">
-            <h4>Why this happens</h4>
-            <p>The server URL in your schema is incorrect or the service is temporarily down.</p>
-
-            <h4>How to fix it</h4>
-            <ul>
-              <li>Verify the server URL is exactly <code>https://api.airtable.com/v0/YOUR_BASE_ID</code></li>
-              <li>Make sure you're using <code>https://</code> not <code>http://</code></li>
-              <li>Check <a href="https://status.airtable.com" target="_blank" rel="noopener noreferrer">Airtable's status page</a> for outages</li>
-              <li>Try again in a few minutes — sometimes it's just a temporary glitch</li>
+              <li>Add clear instructions telling the GPT when to use the action</li>
+              <li>Try explicitly saying "Save this to the database"</li>
+              <li>Ask the GPT "What actions do you have?" — it should list Airtable</li>
             </ul>
           </div>
         </li>
       </ul>
 
-      <div class="info-box tip">
-        <strong>Still stuck?</strong>
-        Try the "Test" button in the GPT action configuration — it shows the exact request and response, which helps pinpoint the issue. You can also check <a href="https://community.openai.com/c/chatgpt/gpts/60" target="_blank" rel="noopener noreferrer">OpenAI's GPT Community Forum</a> for help.
+      <div class="tip">
+        <span class="tip-icon" aria-hidden="true">💡</span>
+        <div class="tip-content">
+          <p><strong>Still stuck?</strong> Use the "Test" button in the GPT action configuration. It shows the exact request and response, which helps pinpoint issues.</p>
+        </div>
       </div>
     </section>
+
   </main>
 
   <footer>
     <div class="container">
-      <p>Built with ☕ to help people build cool things with AI</p>
-      <p style="margin-top: 8px;">Questions? <a href="https://help.openai.com/en/collections/3742473-chatgpt" target="_blank" rel="noopener noreferrer">ChatGPT Help Center</a></p>
+      <p>Built to help people build cool things with AI</p>
+      <p>Questions? Check the <a href="https://help.openai.com/en/collections/3742473-chatgpt" target="_blank" rel="noopener noreferrer">ChatGPT Help Center</a></p>
     </div>
   </footer>
 
   <script>
     function copyCode(button) {
-      const pre = button.closest('.code-wrapper').querySelector('pre');
+      const pre = button.closest('.code-block').querySelector('pre');
       const code = pre.textContent;
 
       navigator.clipboard.writeText(code).then(() => {
@@ -1193,30 +1090,20 @@ Be encouraging and helpful — job hunting is stressful!</code></pre>
       });
     }
 
-    // Smooth scroll for nav links
-    document.querySelectorAll('nav a').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = document.querySelector(link.getAttribute('href'));
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
-
-    // Troubleshooting accordion
-    function toggleError(header) {
-      const item = header.closest('.error-item');
+    function toggleError(button) {
+      const item = button.closest('.error-item');
       const wasOpen = item.classList.contains('open');
 
-      // Close all other items and reset aria-expanded
-      document.querySelectorAll('.error-item.open').forEach(openItem => {
-        openItem.classList.remove('open');
-        openItem.querySelector('.error-header').setAttribute('aria-expanded', 'false');
+      // Close all others
+      document.querySelectorAll('.error-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.error-btn').setAttribute('aria-expanded', 'false');
       });
 
-      // Toggle the clicked item
+      // Toggle current
       if (!wasOpen) {
         item.classList.add('open');
-        header.setAttribute('aria-expanded', 'true');
+        button.setAttribute('aria-expanded', 'true');
       }
     }
   </script>
